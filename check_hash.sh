@@ -5,8 +5,18 @@ PASSWORD=$2
 
 echo $HASH_INFO
 
-if [[ $HASH_INFO =~ \$(.*){3,4} ]] ; then
-	echo ${BASH_REMATCH[1]}
+if [[ $HASH_INFO =~ \$(.*) ]] ; then
+	HASH_TYPE=$(awk -F$ '{ print($2) }' <<< $HASH_INFO)
 else
-	echo "wrong parameter"
+	echo "wrong hash parameter"
+	exit 1
 fi
+
+case $HASH_TYPE in
+	*)
+		echo "unknown hash type"
+		exit 1
+	;;
+esac
+
+exit 1
