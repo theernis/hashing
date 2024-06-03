@@ -4,14 +4,14 @@ HASH_INFO=$1
 PASSWORD=$2
 
 if [[ $HASH_INFO =~ \$(.*) ]] ; then
-	HASH_TYPE=$(awk -F$ '{ print($2) }' <<< $HASH_INFO)
+	HASH_TYPE=$(awk -F'$' '{ print($2) }' <<< $HASH_INFO)
 else
 	echo "wrong hash parameter"
 	exit 1
 fi
 
 hash_openssl() {
-	SALT=$(awk -F$ '{ print($3) }' <<< $HASH_INFO)
+	SALT=$(awk -F'$' '{ print($3) }' <<< $HASH_INFO)
 	case $HASH_TYPE in 
 		1)
 			HASH=$(openssl passwd -1 -salt "$SALT" "$PASSWORD")
@@ -26,7 +26,7 @@ hash_openssl() {
 			exit 1
 		;;
 	esac
-	if [[ $HASH_INFO = $HASH ]] then
+	if [[ $HASH_INFO == $HASH ]] ; then
 		exit 0
 	fi
 	exit 1
